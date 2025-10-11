@@ -8,7 +8,7 @@
  */
 const oktaConfig = {
     baseUrl: 'https://dev-10248048.okta.com', // Replace with your Okta domain (e.g., 'https://dev-123456.okta.com')
-    clientId: '0oaqykipo2B3mBh495d7', // Replace with your Client ID from Okta app integration
+    clientId: '0oaqyocca6eCDMjYk5d7', // Replace with your Client ID from Okta app integration
     redirectUri: window.location.origin,
     authParams: {
         issuer: 'https://dev-10248048.okta.com/oauth2/default', // Replace with your issuer URL
