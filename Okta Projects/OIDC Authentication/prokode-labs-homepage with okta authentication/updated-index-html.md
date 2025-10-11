@@ -1,0 +1,334 @@
+# Updated Prokode Labs Index.html with Okta Authentication
+
+Replace your current `index.html` file with this updated version that includes Okta authentication:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prokode Labs - Internal Portal</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Okta Sign-In Widget CSS and JS -->
+    <script src="https://global.oktacdn.com/okta-signin-widget/7.36.1/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/7.36.1/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+    <!-- Authentication Status Bar (hidden initially) -->
+    <div id="auth-status" class="auth-status" style="display: none;">
+        <div class="auth-container">
+            <div class="auth-user-info">
+                <span id="user-welcome">Welcome, </span>
+                <span id="user-name" class="user-name"></span>
+            </div>
+            <button id="logout-btn" class="auth-logout-btn">
+                <span>Logout</span>
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                    <path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Login Overlay (shown when not authenticated) -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <h1>Prokode Labs</h1>
+                    <div class="logo-icon">
+                        <svg width="40" height="40" fill="var(--prokode-accent-teal)" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zM3 6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z"/>
+                        </svg>
+                    </div>
+                </div>
+                <p class="login-tagline">Internal Portal Access</p>
+            </div>
+            <div class="login-content">
+                <p class="login-description">Sign in with your Okta credentials to access the internal IAM portal</p>
+                <div id="okta-signin-container" class="okta-signin-container"></div>
+                <div id="auth-loading" class="auth-loading" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <p>Authenticating...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content (your existing homepage wrapped) -->
+    <div id="protected-content" style="display: none;">
+        <!-- Fixed Navigation Bar -->
+        <nav class="navbar" id="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h2>Prokode Labs</h2>
+                </div>
+                <ul class="nav-menu" id="nav-menu">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#services" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#projects" class="nav-link">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#team" class="nav-link">Team</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#resources" class="nav-link">Resources</a>
+                    </li>
+                </ul>
+                <div class="nav-toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero/Welcome Section -->
+        <section id="home" class="hero">
+            <div class="hero-background">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1754843849/pplx_project_search_images/67c3ce153d56fea5946c1e5c059f149a2427e8d8.png" alt="Network Visualization Background" class="hero-bg-image">
+                <div class="hero-overlay"></div>
+            </div>
+            <div class="hero-content">
+                <div class="container">
+                    <h1 class="hero-title">Welcome to Prokode Labs</h1>
+                    <p class="hero-subtitle">Securing Digital Identities, Empowering Enterprise Access</p>
+                    <a href="#services" class="hero-cta">Explore Our Services</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission & Vision Section -->
+        <section class="mission-vision">
+            <div class="container">
+                <div class="mission-vision-grid">
+                    <div class="mission-card">
+                        <h3>Our Mission</h3>
+                        <p>To deliver comprehensive Identity and Access Management solutions that protect organizations while enabling seamless user experiences.</p>
+                    </div>
+                    <div class="vision-card">
+                        <h3>Our Vision</h3>
+                        <p>Leading the future of secure digital identity through innovative IAM technologies and expert consulting services.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- IAM Service Areas Section -->
+        <section id="services" class="services">
+            <div class="container">
+                <h2 class="section-title">IAM Service Areas</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">🔐</div>
+                        <h3>Okta & Entra ID Integration</h3>
+                        <p>Single Sign-On, Multi-Factor Authentication, and Identity Federation</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">⚖️</div>
+                        <h3>SailPoint Identity Governance</h3>
+                        <p>User Lifecycle Management, Access Reviews, and Compliance</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🛡️</div>
+                        <h3>CyberArk Privileged Access</h3>
+                        <p>Vault Management, Session Recording, and Threat Analytics</p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">📋</div>
+                        <h3>IAM Strategy & Consulting</h3>
+                        <p>Architecture Planning, Security Assessments, and Best Practices</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Projects Section -->
+        <section id="projects" class="projects">
+            <div class="projects-background">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1758388333/pplx_project_search_images/7c74b302bb52235186f04628a3fb4773f17e91e5.png" alt="Conference Room Background" class="projects-bg-image">
+                <div class="projects-overlay"></div>
+            </div>
+            <div class="container">
+                <h2 class="section-title light">Current Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <h3>Azure AD Migration Phase 2</h3>
+                        <p>Migrating legacy authentication systems to modern Azure Active Directory</p>
+                        <div class="project-status">
+                            <span class="status-badge in-progress">In Progress</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                            <span class="progress-text">65%</span>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <h3>SailPoint IGA Implementation</h3>
+                        <p>Deploying identity governance automation for compliance management</p>
+                        <div class="project-status">
+                            <span class="status-badge testing">Testing</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                            <span class="progress-text">85%</span>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <h3>Privileged Access Modernization</h3>
+                        <p>Upgrading CyberArk infrastructure for enhanced security monitoring</p>
+                        <div class="project-status">
+                            <span class="status-badge planning">Planning</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 25%"></div>
+                            </div>
+                            <span class="progress-text">25%</span>
+                        </div>
+                    </div>
+                    <div class="project-card">
+                        <h3>Zero Trust Architecture</h3>
+                        <p>Implementing comprehensive zero trust security framework</p>
+                        <div class="project-status">
+                            <span class="status-badge in-progress">In Progress</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 45%"></div>
+                            </div>
+                            <span class="progress-text">45%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources & Quick Links Section -->
+        <section id="resources" class="resources">
+            <div class="container">
+                <h2 class="section-title">Resources & Quick Links</h2>
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon">🌐</div>
+                        <h3>VPN Access Portal</h3>
+                        <p>Secure remote access gateway</p>
+                        <a href="#" class="resource-link">Access Portal</a>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">📚</div>
+                        <h3>Knowledge Base</h3>
+                        <p>IAM documentation and procedures</p>
+                        <a href="#" class="resource-link">Browse Docs</a>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">🎧</div>
+                        <h3>IT Helpdesk</h3>
+                        <p>Technical support and tickets</p>
+                        <a href="#" class="resource-link">Get Support</a>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">📋</div>
+                        <h3>IAM Policy Library</h3>
+                        <p>Security policies and guidelines</p>
+                        <a href="#" class="resource-link">View Policies</a>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">🔒</div>
+                        <h3>Security Guidelines</h3>
+                        <p>Best practices and compliance requirements</p>
+                        <a href="#" class="resource-link">Read Guidelines</a>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">🎓</div>
+                        <h3>Training Resources</h3>
+                        <p>Professional development and certifications</p>
+                        <a href="#" class="resource-link">Start Learning</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team & Organization Section -->
+        <section id="team" class="team">
+            <div class="team-background">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1755187346/pplx_project_search_images/e714295d381e503e7df4ac2cefcc31c9908d84ed.png" alt="Professional Office Team" class="team-bg-image">
+                <div class="team-overlay"></div>
+            </div>
+            <div class="container">
+                <h2 class="section-title light">Team & Organization</h2>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <h3>John Smith</h3>
+                        <p class="team-role">IAM Architect</p>
+                        <p class="team-department">Security Department</p>
+                    </div>
+                    <div class="team-card">
+                        <h3>Sarah Johnson</h3>
+                        <p class="team-role">Security Lead</p>
+                        <p class="team-department">Security Department</p>
+                    </div>
+                    <div class="team-card">
+                        <h3>Mike Chen</h3>
+                        <p class="team-role">Integration Specialist</p>
+                        <p class="team-department">Engineering Department</p>
+                    </div>
+                    <div class="team-card">
+                        <h3>Lisa Wang</h3>
+                        <p class="team-role">Compliance Manager</p>
+                        <p class="team-department">Governance Department</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>Prokode Labs</h3>
+                        <p>Internal Employee Portal</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="#services">Services</a></li>
+                            <li><a href="#projects">Projects</a></li>
+                            <li><a href="#team">Team</a></li>
+                            <li><a href="#resources">Resources</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <p>Email: internal@prokodelabs.com</p>
+                        <p>Phone: (555) 123-4567</p>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Prokode Labs. All rights reserved.</p>
+                    <p class="internal-notice">For Internal Use Only - Confidential</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Load authentication script first -->
+    <script src="auth.js"></script>
+    <!-- Then load your existing app script -->
+    <script src="app.js"></script>
+</body>
+</html>
+```
+
+The key changes made:
+1. **Added Okta Sign-In Widget CDN** in the head section
+2. **Added authentication status bar** that shows user info when logged in
+3. **Added login overlay** with professional Prokode Labs branding
+4. **Wrapped existing content** in a `protected-content` div that's hidden until authentication
+5. **Updated script loading order** to load auth.js before app.js
+6. **Added visual elements** like loading spinner and professional styling
