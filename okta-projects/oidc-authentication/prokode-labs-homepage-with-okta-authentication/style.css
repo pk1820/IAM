@@ -1,515 +1,285 @@
+/* =============================================================================
+   ENTERPRISE AUTHENTICATION STYLES FOR PROKODE LABS (UPDATED)
+   - Addresses client UI recommendations: contrast, spacing, FastPass redesign,
+     smaller white areas inside Okta widget, better checkbox, inline error area,
+     keyboard & ARIA friendly focus states, mobile responsiveness.
+   ============================================================================= */
 
-.auth-status {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, #173159, #217eaa);
-    color: #ffffff;
-    padding: 12px 0;
-    z-index: 9999;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(74,199,244,0.2);
+/* ---------- COLOR VARIABLES ---------- */
+:root{
+    --bg-dark: #0f1a26;
+    --panel-dark: #111822;
+    --muted-blue: #173159;
+    --accent-teal: #4ac7f4;
+    --accent-deep: #217eaa;
+    --text-light: #eaf6ff;
+    --text-muted: #a9bed4;
+    --danger: #d73027;
+    --success: #2fc05f;
+    --card-border: rgba(74,199,244,0.12);
 }
 
+/* Reset small things */
+* { box-sizing: border-box; }
+
+/* Authentication Status Bar */
+.auth-status {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: linear-gradient(135deg, var(--muted-blue), var(--accent-deep));
+    color: var(--text-light);
+    padding: 10px 0;
+    z-index: 9999;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(74,199,244,0.08);
+}
 .auth-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 0 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
+.auth-user-info { font-size: 13px; color: var(--text-light); }
+.user-name { color: var(--accent-teal); font-weight:700; }
 
-.auth-user-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.user-name {
-    color: #4AC7F4;
-    font-weight: 600;
-}
-
-.auth-logout-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(255,255,255,0.10);
-    border: 1px solid rgba(255,255,255,0.20);
-    color: #fff;
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.17s;
-    min-height: 36px;
-}
-
-.auth-logout-btn:hover {
-    background: rgba(255,255,255,0.18);
-    border-color: #4ac7f4;
-    transform: translateY(-1px);
-}
-
-.auth-logout-btn:focus {
-    outline: 2px solid #4AC7F4 !important;
-    outline-offset: 2px !important;
-}
-
-.auth-logout-btn svg {
-    width: 16px; 
-    height: 16px;
-}
-
-/* Login Overlay and Card - REDUCED VERTICAL SPACE */
+/* Login Overlay and Card */
 .login-overlay {
-    position: fixed;
-    top: 0; 
-    left: 0; 
-    right: 0; 
-    bottom: 0;
-    background: linear-gradient(135deg, #173159 98%, #217eaa 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: fixed; inset: 0;
+    background: linear-gradient(180deg, rgba(7,14,28,0.86), rgba(7,14,28,0.95));
+    display:flex;
+    align-items:center;
+    justify-content:center;
     z-index: 10000;
-    backdrop-filter: blur(24px);
-    animation: fadeIn 0.5s;
-}
-
-.login-card {
-    background: rgba(18,24,36,0.97);
-    border: 2px solid #4ac7f4;
-    border-radius: 16px;
-    box-shadow: 0 18px 42px rgba(30,46,79,0.27);
-    text-align: center;
-    max-width: 420px;
-    width: min(96vw,420px);
-    padding: 20px 24px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: #eaf6ff;
-    /* REDUCED VERTICAL SPACING */
-    gap: 12px;
-}
-
-/* Login Header - PERSONALIZED BRANDING */
-.login-header { 
-    margin-bottom: 8px; 
-}
-
-.login-logo { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 12px; 
-    margin-bottom: 8px; 
-}
-
-.login-logo h1 { 
-    color: #bfeaff; 
-    font-size: 2.2rem; 
-    font-weight: 700; 
-    margin: 0; 
-    text-shadow: 0 2px 6px rgba(0,0,0,0.14); 
-}
-
-.logo-icon { 
-    width: 52px; 
-    height: 52px; 
-    background: linear-gradient(135deg,#4AC7F4,#217eaa); 
-    border-radius: 10px;
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    box-shadow: 0 4px 14px rgba(74,199,244,0.4);
-}
-
-.login-tagline { 
-    color: #98c9e6; 
-    font-size: 1.07rem; 
-    margin: 0; 
-    font-weight: 500; 
-}
-
-.login-content { 
-    position: relative; 
-    width: 100%; 
-}
-
-.login-description { 
-    color: #cbeaff; 
-    margin-bottom: 16px; 
-    line-height: 1.5; 
-    font-size: 1rem; 
-}
-
-/* REDESIGNED FASTPASS BUTTON WITH ICON AND TOOLTIP */
-.fastpass-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-    background: #fff;
-    color: #173159;
-    border: 2px solid #4ac7f4;
-    font-weight: 600;
-    font-size: 1.1em;
-    border-radius: 8px;
-    min-height: 48px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    box-shadow: 0 3px 16px rgba(74, 199, 244, .15);
-    transition: all 0.25s;
-    width: 100%;
-    position: relative;
-}
-
-.fastpass-btn:hover, .fastpass-btn:focus {
-    background: #4ac7f4;
-    color: #fff;
-    outline: 2px solid #173159;
-    transform: translateY(-1px);
-}
-
-.fastpass-btn:focus {
-    outline: 2px solid #4AC7F4 !important;
-    outline-offset: 2px !important;
-}
-
-.fastpass-icon svg { 
-    display: block; 
-}
-
-.or-separator {
-    margin: 14px 0 10px 0;
-    display: flex;
-    align-items: center;
-    color: #6ba9db;
-    font-size: 1.02em;
-    width: 100%;
-}
-
-.or-separator::before,
-.or-separator::after {
-    content: '';
-    flex: 1;
-    border-bottom: 1px solid #4ac7f4;
-}
-
-.or-separator span {
-    padding: 0 12px;
-}
-
-/* OKTA WIDGET CONTAINER - REDUCED SPACE */
-.okta-signin-container {
-    width: 100%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    min-height: auto; /* REDUCED from 440px */
-    max-height: 60vh;
-    overflow-y: auto;
-}
-
-/* IMPROVED INPUT FIELD CONTRAST AND ACCESSIBILITY */
-#okta-signin-container .okta-sign-in-widget {
-    background: transparent !important;
-    border-radius: 12px !important;
-    box-shadow: none !important;
-}
-
-#okta-signin-container .okta-form-title,
-#okta-signin-container label {
-    color: #ffffff !important; /* INCREASED CONTRAST */
-    font-weight: 700 !important;
-    font-size: 1.15em !important;
-    margin-bottom: 6px !important;
-}
-
-/* REFINED INPUT FIELDS - UNIFORM SPACING AND ELEGANT DESIGN */
-#okta-signin-container input {
-    background: #222d39 !important;
-    color: #fff !important;
-    border: 2px solid #4ac7f4 !important;
-    border-radius: 8px !important;
-    padding: 12px 14px !important; /* IMPROVED PADDING */
-    font-size: 1.05em !important;
-    transition: all 0.2s !important;
-    min-height: 20px !important;
-}
-
-/* IMPROVED PLACEHOLDER CONTRAST */
-#okta-signin-container input::placeholder {
-    color: #94bff2 !important; /* INCREASED CONTRAST */
-    opacity: 1 !important;
-}
-
-/* ENHANCED FOCUS STATES FOR ACCESSIBILITY */
-#okta-signin-container input:focus {
-    border-color: #4ac7f4 !important;
-    box-shadow: 0 0 0 3px rgba(74,199,244,0.25) !important;
-    outline: 2px solid #4AC7F4 !important;
-    outline-offset: 2px !important;
-}
-
-/* IMPROVED BUTTON STYLING */
-#okta-signin-container .button-primary {
-    background: #4ac7f4 !important;
-    color: #173159 !important;
-    border-radius: 8px !important;
-    font-weight: bold !important;
-    min-width: 160px !important;
-    min-height: 44px !important; /* IMPROVED HEIGHT */
-    margin-top: 16px !important;
-    margin-bottom: 12px !important;
-    box-shadow: 0 2px 8px rgba(74,199,244,0.2) !important;
-    transition: all 0.2s !important;
-    font-size: 1.05em !important;
-}
-
-#okta-signin-container .button-primary:hover {
-    background: #217eaa !important;
-    color: #fff !important;
-    transform: translateY(-1px) !important;
-}
-
-#okta-signin-container .button-primary:focus {
-    outline: 2px solid #4AC7F4 !important;
-    outline-offset: 2px !important;
-}
-
-/* IMPROVED CHECKBOX VISIBILITY AND ACCESSIBILITY */
-#okta-signin-container input[type="checkbox"] {
-    width: 1.4em !important;
-    height: 1.4em !important;
-    accent-color: #4ac7f4 !important;
-    cursor: pointer !important;
-}
-
-#okta-signin-container .okta-form-input-field {
-    margin-bottom: 16px !important; /* UNIFORM SPACING */
-}
-
-/* PASSWORD VISIBILITY ICON ALIGNMENT */
-#okta-signin-container .input-icon {
-    right: 12px !important;
-    color: #4ac7f4 !important; /* INCREASED CONTRAST */
-}
-
-/* LINK IMPROVEMENTS */
-#okta-signin-container .link {
-    color: #4ac7f4 !important;
-    font-weight: 500 !important;
-}
-
-#okta-signin-container .link:hover {
-    color: #217eaa !important;
-    text-decoration: underline !important;
-}
-
-#okta-signin-container .link:focus {
-    outline: 2px solid #4AC7F4 !important;
-    outline-offset: 2px !important;
-}
-
-/* ERROR MESSAGE WITH ANIMATION */
-.auth-error-message {
-    background: rgba(255,84,89,0.13);
-    border: 1.5px solid #d73027;
-    color: #ff6b6b; /* IMPROVED CONTRAST */
-    padding: 14px 18px;
-    border-radius: 8px;
-    margin: 16px 0 0;
-    font-size: 0.98em;
-    text-align: center;
-    animation: slideIn 0.4s ease-out; /* ANIMATED TRANSITION */
-    font-weight: 500;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* FOOTER BRANDING FOR TRUST */
-.login-footer {
-    margin-top: 20px; /* REDUCED SPACE */
-    font-size: 0.96em;
-    color: #8bd7ff;
-    width: 100%;
-    border-top: 1px solid rgba(74,199,244,0.2);
-    padding-top: 16px;
-}
-
-.login-footer .internal-notice {
-    color: #bfeaff;
-    font-size: 0.90em;
-    display: block;
-    margin-top: 4px;
-    font-weight: 500;
-}
-
-/* ANIMATIONS */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(28px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* RESPONSIVE DESIGN - MOBILE-FRIENDLY */
-@media (max-width: 540px) {
-    .login-card { 
-        width: 95vw; 
-        max-width: none; 
-        padding: 16px 18px;
-        gap: 8px;
-    }
-    
-    .login-logo h1 { 
-        font-size: 1.8rem; 
-    }
-    
-    .login-header { 
-        margin-bottom: 8px; 
-    }
-    
-    .login-tagline { 
-        font-size: 0.98rem; 
-    }
-    
-    .fastpass-btn {
-        font-size: 1.05em;
-        min-height: 44px;
-    }
-    
-    #okta-signin-container input {
-        font-size: 1em !important;
-        padding: 10px 12px !important;
-    }
-}
-
-@media (max-width: 420px) {
-    .login-card {
-        font-size: 0.95em;
-        padding: 14px 16px;
-    }
-    
-    .logo-icon {
-        width: 44px;
-        height: 44px;
-    }
-}
-
-/* KEYBOARD NAVIGATION AND FOCUS IMPROVEMENTS */
-*:focus {
-    outline: 2px solid #4AC7F4 !important;
-    outline-offset: 2px !important;
-}
-
-button:focus,
-input:focus,
-select:focus,
-textarea:focus,
-a:focus {
-    outline: 2px solid #4AC7F4 !important;
-    outline-offset: 2px !important;
-}
-
-/* Skip to main content for accessibility */
-.skip-link {
-    position: absolute;
-    top: -40px;
-    left: 6px;
-    background: #4AC7F4;
-    color: #173159;
-    padding: 8px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-weight: bold;
-    z-index: 10001;
-}
-
-.skip-link:focus {
-    top: 6px;
-}
-
-/* Main content styling (post-authentication) */
-.main-content {
-    display: none; /* Hidden until authenticated */
     padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+.login-card {
+    background: linear-gradient(180deg, rgba(18,24,36,0.98), rgba(14,20,30,0.98));
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    max-width: 520px;
+    width: 100%;
+    padding: 22px;
+    color: var(--text-light);
+    box-shadow: 0 18px 44px rgba(3,10,20,0.6);
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap: 8px;
+    /* Reduce excessive vertical space, center content */
+    justify-content: flex-start;
+    max-height: 90vh;
+    overflow: auto;
 }
 
-.main-content.authenticated {
-    display: block;
-    margin-top: 60px; /* Account for auth status bar */
+/* Header */
+.login-header { text-align:center; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid rgba(255,255,255,0.02);}
+.login-logo { display:flex; flex-direction:row; gap:12px; align-items:center; justify-content:center; }
+.logo-icon { width:46px; height:46px; border-radius:10px; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, var(--accent-teal), var(--accent-deep)); box-shadow: 0 6px 18px rgba(34,64,91,0.35);}
+.login-logo h1 { margin:0; font-size:1.35rem; color: var(--text-light); font-weight:800; letter-spacing: -0.5px; }
+.login-tagline { margin:6px 0 0; color: var(--text-muted); font-weight:600; }
+
+/* Description */
+.login-description { color: var(--text-muted); font-size:0.95rem; margin: 12px 0 8px; line-height:1.45; text-align:center; }
+
+/* Okta widget container overrides (remove full-white look and increase contrast) */
+#okta-signin-wrapper { display:flex; justify-content:center; width:100%; }
+#okta-signin-container {
+    width: 100%;
+    max-width: 420px;
+    background: transparent !important;
+    border-radius: 10px;
+    padding: 6px 8px !important;
+    margin: 6px auto 0;
 }
 
-/* Loading states */
-.auth-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 40px;
+/* The Okta widget internal container sometimes uses its own classes - reduce white backgrounds */
+.okta-sign-in-widget, 
+.okta-form-container, 
+.okta-form-panel, 
+.okta-form-title {
+    background: transparent !important;
+    color: var(--text-light) !important;
 }
 
-.loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid #4ac7f4;
-    border-top: 3px solid #217eaa;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+/* Labels and placeholders - higher contrast */
+#okta-signin-container .okta-form-title,
+#okta-signin-container label,
+#okta-signin-container .okta-form-subtitle {
+    color: var(--text-light) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.2px;
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+/* Inputs */
+#okta-signin-container input[type="text"],
+#okta-signin-container input[type="password"],
+#okta-signin-container input[type="email"],
+#okta-signin-container .okta-form-input-field input {
+    background: linear-gradient(180deg, #0f1a26 0%, #131d27 100%) !important;
+    color: #eaf6ff !important;
+    border: 1.4px solid rgba(74,199,244,0.25) !important;
+    border-radius: 9px !important;
+    padding: 10px 12px !important;
+    font-size: 0.98rem !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .login-card {
-        border: 3px solid #4AC7F4;
-    }
-    
-    #okta-signin-container input {
-        border: 3px solid #4AC7F4 !important;
-    }
-    
-    .fastpass-btn {
-        border: 3px solid #4AC7F4;
-    }
+/* Placeholder color (higher contrast) */
+#okta-signin-container input::placeholder {
+    color: rgba(234,246,255,0.45) !important;
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+/* Focus state */
+#okta-signin-container .okta-form-input-field input:focus {
+    border-color: var(--accent-teal) !important;
+    box-shadow: 0 0 0 4px rgba(74,199,244,0.08) !important;
+    outline: none !important;
 }
+
+/* Primary button (Sign in) */
+#okta-signin-container .button-primary,
+#okta-signin-container .okta-button-primary {
+    background: var(--accent-teal) !important;
+    color: #092033 !important;
+    border-radius: 10px !important;
+    padding: 10px 18px !important;
+    font-weight: 800 !important;
+    font-size: 1rem !important;
+    min-width: 140px !important;
+    box-shadow: none !important;
+    margin: 12px auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+#okta-signin-container .button-primary:hover,
+#okta-signin-container .okta-button-primary:hover {
+    background: var(--accent-deep) !important;
+    color: #fff !important;
+}
+
+/* Buttons container: center and remove extra whitespace */
+#okta-signin-container .okta-form-actions {
+    display:flex !important;
+    justify-content:center !important;
+    gap: 12px;
+    padding-top: 6px !important;
+}
+
+/* FastPass / IDP button redesign - .pk-fastpass added by runtime script */
+.pk-fastpass {
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    background: linear-gradient(90deg, rgba(76,196,244,0.08), rgba(33,126,170,0.06));
+    border: 1px solid rgba(74,199,244,0.14);
+    color: var(--text-light);
+    padding: 8px 12px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease;
+    width:100%;
+    box-shadow: 0 6px 14px rgba(11,22,34,0.45);
+    text-align:left;
+    min-height:44px;
+    font-weight:700;
+}
+.pk-fastpass:focus, .pk-fastpass.pk-focus { outline: 3px solid rgba(74,199,244,0.14); outline-offset: 2px; }
+.pk-fastpass:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(11,22,34,0.55); }
+.pk-fastpass-icon { display:flex; align-items:center; justify-content:center; color:var(--accent-teal); width:34px; height:34px; border-radius:6px; background: rgba(34,64,91,0.28); }
+.pk-fastpass-text { display:flex; flex-direction:column; line-height:1.05; color: var(--text-light); }
+.pk-fastpass-sub { font-size:0.78rem; color: var(--text-muted); font-weight:600; margin-top:3px; }
+
+/* Tooltip for FastPass - appears on hover/focus */
+.pk-fastpass-tooltip {
+    display:block;
+    font-size:0.82rem;
+    color: var(--text-muted);
+    margin-top:6px;
+    opacity:0;
+    max-height:0;
+    transition: all .18s ease;
+}
+.pk-fastpass:hover .pk-fastpass-tooltip,
+.pk-fastpass:focus .pk-fastpass-tooltip,
+.pk-fastpass:active .pk-fastpass-tooltip {
+    opacity:1;
+    max-height:120px;
+}
+
+/* Inline error area for Okta messages */
+.okta-inline-error {
+    margin-top:10px;
+    background: rgba(215,48,39,0.07);
+    border: 1px solid rgba(215,48,39,0.14);
+    color: var(--danger);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-weight:700;
+    display:block;
+}
+
+/* Global auth error (outside widget) */
+.auth-error-message {
+    background: rgba(215,48,39,0.09);
+    border: 1px solid rgba(215,48,39,0.16);
+    color: var(--danger);
+    padding: 12px;
+    border-radius: 8px;
+    text-align:center;
+    font-weight:700;
+    margin-top: 12px;
+}
+
+/* Checkbox styling: bigger and accessible */
+#okta-signin-container input[type="checkbox"],
+#okta-signin-container .okta-checkbox input[type="checkbox"] {
+    transform: scale(1.2);
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-teal);
+}
+
+/* Align visibility icon to the right inside input area (different Okta versions vary) */
+#okta-signin-container .password-toggle,
+#okta-signin-container .passwordVisibility,
+#okta-signin-container .okta-sign-in-with-password .password-toggle {
+    margin-left: 6px;
+    align-self: center;
+    opacity: 0.95;
+}
+
+/* Focus states */
+.pk-focus, .okta-sign-in-widget a:focus, .okta-sign-in-widget button:focus, .okta-sign-in-widget input:focus {
+    outline: 3px solid rgba(74,199,244,0.12) !important;
+    outline-offset: 2px !important;
+}
+
+/* Small screen adjustments */
+@media (max-width: 700px) {
+    .login-card { max-width: 96vw; padding: 14px; border-radius: 12px; }
+    #okta-signin-container { max-width: 100%; padding: 6px !important; min-height: 260px; }
+    .pk-fastpass { min-height: 48px; }
+}
+
+/* Screen-reader only helper */
+.sr-only { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px,1px,1px,1px); white-space: nowrap; }
+
+/* Protected content minor transition */
+#protected-content { margin-top: 60px; opacity: 0; transition: opacity 0.45s ease-in-out; }
+#protected-content.loaded { opacity: 1; }
+
+/* Footer and other site styles remain unchanged below (keeps your homepage intact) */
+.hero { padding: 60px 0 40px; }
+.container { max-width:1200px; margin: 0 auto; padding: 0 20px; }
+.footer { padding: 28px 0; background: linear-gradient(180deg,#061224,#081827); color: var(--text-muted); }
+.footer a { color: var(--accent-teal); text-decoration:none; }
+
+/* small helper for accessibility focus visible only when keyboard used */
+:focus:not(:focus-visible) { outline: none; }
+
+/* End of stylesheet */
