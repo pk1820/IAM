@@ -12,7 +12,7 @@ const oktaConfig = {
     redirectUri: 'https://pk1820.github.io/IAM/okta-projects/oidc-authentication/prokode-labs-homepage-with-okta-authentication/',
     authParams: {
         issuer: 'https://dev-10248048.okta.com/oauth2/default', // Replace with your issuer URL
-        scopes: ['openid', 'profile', 'email', 'groups'],
+        scopes: ['openid', 'profile', 'email'],
         pkce: true // Enable PKCE for security
     },
     features: {
