@@ -9,7 +9,7 @@
 const oktaConfig = {
     baseUrl: 'https://dev-10248048.okta.com', // Replace with your Okta domain (e.g., 'https://dev-123456.okta.com')
     clientId: '0oaqyocca6eCDMjYk5d7', // Replace with your Client ID from Okta app integration
-    redirectUri: window.location.origin,
+    redirectUri: 'https://pk1820.github.io/IAM/okta-projects/oidc-authentication/prokode-labs-homepage-with-okta-authentication/',
     authParams: {
         issuer: 'https://dev-10248048.okta.com/oauth2/default', // Replace with your issuer URL
         scopes: ['openid', 'profile', 'email', 'groups'],
