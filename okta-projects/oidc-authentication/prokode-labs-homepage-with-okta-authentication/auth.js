@@ -66,9 +66,9 @@ const oktaConfig = {
     i18n: {
         en: {
             'primaryauth.title': 'Sign in to Prokode Labs Portal',
-            'primaryauth.title': 'Sign In Securely',
-            'primaryauth.title': 'Enter your work email',
-            'primaryauth.title': 'Enter your password',
+            'primaryauth.submit': 'Sign In Securely',
+            'primaryauth.username.placeholder': 'Enter your work email',
+            'primaryauth.password.placeholder': 'Enter your password',
             'remember.me.label': 'Keep me signed in for 30 days',
             'oform.errorbanner.title': 'Authentication Error',
             'errors.E0000004': 'Authentication failed. Please check your credentials and try again.',
