@@ -1,295 +1,512 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Prokode Labs - Internal Portal</title>
-    <link rel="stylesheet" href="style.css"/>
-
-    <!-- Okta Sign-In Widget CSS and JS -->
-    <script src="https://global.oktacdn.com/okta-signin-widget/7.36.1/js/okta-sign-in.min.js" type="text/javascript"></script>
-    <link href="https://global.oktacdn.com/okta-signin-widget/7.36.1/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Prokode Labs - Internal Portal Access</title>
+    <meta name="description" content="Prokode Labs Internal Portal - Secure access for employees. Identity and Access Management solutions.">
+    <meta name="keywords" content="Prokode Labs, IAM, Identity Management, Access Management, Security, Authentication">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; script-src 'self' 'unsafe-inline' https://global.oktacdn.com https://ok1static.oktacdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Okta Sign-In Widget -->
+    <script src="https://global.oktacdn.com/okta-signin-widget/7.0.0/js/okta-sign-in.min.js" type="text/javascript"></script>
+    <link href="https://global.oktacdn.com/okta-signin-widget/7.0.0/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
+    
+    <!-- ARIA Live Region for Screen Readers -->
+    <div id="aria-live-region" aria-live="polite" aria-atomic="true" class="sr-only" style="position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;"></div>
 </head>
 <body>
-    <!-- Authentication Status Bar (hidden initially) -->
-    <div id="auth-status" class="auth-status" style="display: none;">
-        <div class="auth-container">
-            <div class="auth-user-info" aria-live="polite">
-                <span id="user-welcome">Welcome,</span>
-                <span id="user-name" class="user-name"></span>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Login Overlay (Authentication Screen) -->
+    <div id="login-overlay" class="login-overlay" role="main" aria-label="Authentication">
+        <div class="login-card" role="dialog" aria-labelledby="login-title" aria-describedby="login-description">
+            <!-- Header Section -->
+            <div class="login-header">
+                <div class="login-logo">
+                    <div class="logo-icon" aria-hidden="true">🔐</div>
+                    <h1 id="login-title">Prokode Labs</h1>
+                </div>
+                <p id="login-description" class="login-tagline">
+                    Welcome to Prokode Labs Portal — Secure access for employees
+                </p>
             </div>
-            <button id="logout-btn" class="auth-logout-btn" aria-label="Logout">
-                <span>Logout</span>
-                <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-                    <path d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-                    <path d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-                </svg>
+            
+            <!-- Authentication Loading State -->
+            <div id="auth-loading" style="display: none;" role="status" aria-label="Loading authentication">
+                <div class="auth-spinner" aria-hidden="true"></div>
+                <p class="auth-loading-text">Authenticating...</p>
+            </div>
+            
+            <!-- Okta Sign-In Widget Container -->
+            <div id="okta-signin-wrapper" style="display: none;">
+                <div id="okta-signin-container" role="form" aria-label="Sign in form"></div>
+            </div>
+            
+            <!-- Copyright Information -->
+            <div class="login-footer" style="margin-top: 24px; text-align: center; font-size: 0.75rem; color: var(--text-secondary);">
+                <p>&copy; 2024 Prokode Labs. All rights reserved.</p>
+                <p style="margin-top: 4px;">For authorized personnel only</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Protected Content (Main Application) -->
+    <div id="protected-content" style="display: none;">
+        <!-- Authentication Status Bar -->
+        <div id="auth-status" role="banner" aria-label="Authentication status">
+            <div class="user-info">
+                <span aria-label="Authentication status">✅ Authenticated as:</span>
+                <strong id="user-name" aria-live="polite">Loading...</strong>
+            </div>
+            <button id="logout-btn" class="logout-btn" type="button" aria-label="Sign out">
+                Sign Out
             </button>
         </div>
-    </div>
 
-    <!-- Login Overlay (shown when not authenticated) -->
-    <div id="login-overlay" class="login-overlay" role="dialog" aria-modal="true" aria-labelledby="portal-title">
-        <div class="login-card" role="document">
-            <div class="login-header">
-                <div class="login-logo" aria-hidden="true">
-                    <div class="logo-icon" title="Prokode Labs">
-                        <svg width="40" height="40" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zM3 6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z"/>
-                        </svg>
-                    </div>
-                    <h1 id="portal-title">Prokode Labs</h1>
-                </div>
-                <p class="login-tagline">Internal Portal Access</p>
-            </div>
-
-            <div class="login-content">
-                <p class="login-description">Welcome to <strong>Prokode Labs Portal</strong> — secure access for employees. Sign in with your Okta credentials to continue.</p>
-
-                <!-- A11y hint for keyboard users -->
-                <div class="sr-only" id="okta-hint" aria-hidden="false">
-                    Use Tab to move between fields and Enter to submit. For help contact internal@prokodelabs.com.
-                </div>
-
-                <!-- Container for Okta widget -->
-                <div id="okta-signin-wrapper" class="okta-signin-wrapper" aria-label="Sign-in form container">
-                    <div id="okta-signin-container" class="okta-signin-container" aria-describedby="okta-hint"></div>
-                </div>
-
-                <!-- Generic area for authentication errors (populated by JS or server side) -->
-                <div id="global-auth-error" class="auth-error-message" role="alert" aria-live="assertive" style="display:none;"></div>
-
-                <div id="auth-loading" class="auth-loading" style="display: none;">
-                    <div class="loading-spinner" aria-hidden="true"></div>
-                    <p>Authenticating...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Protected Content (your existing homepage wrapped) -->
-    <div id="protected-content" style="display: none;">
-        <!-- Fixed Navigation Bar -->
-        <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
-            <div class="nav-container">
+        <!-- Navigation Header -->
+        <nav id="navbar" role="navigation" aria-label="Main navigation">
+            <div class="navbar-container">
+                <!-- Company Logo and Branding -->
                 <div class="nav-logo">
+                    <div class="logo-icon" aria-hidden="true">🔐</div>
                     <h2>Prokode Labs</h2>
+                    <span class="nav-subtitle">Internal Portal</span>
                 </div>
-                <ul class="nav-menu" id="nav-menu">
-                    <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="#services" class="nav-link">Services</a></li>
-                    <li class="nav-item"><a href="#projects" class="nav-link">Projects</a></li>
-                    <li class="nav-item"><a href="#team" class="nav-link">Team</a></li>
-                    <li class="nav-item"><a href="#resources" class="nav-link">Resources</a></li>
+
+                <!-- Desktop Navigation Links -->
+                <ul class="nav-menu" id="nav-menu" role="menubar">
+                    <li role="none"><a href="#home" class="nav-link" role="menuitem">Home</a></li>
+                    <li role="none"><a href="#services" class="nav-link" role="menuitem">Services</a></li>
+                    <li role="none"><a href="#projects" class="nav-link" role="menuitem">Projects</a></li>
+                    <li role="none"><a href="#team" class="nav-link" role="menuitem">Team</a></li>
+                    <li role="none"><a href="#resources" class="nav-link" role="menuitem">Resources</a></li>
+                    <li role="none"><a href="#contact" class="nav-link" role="menuitem">Contact</a></li>
                 </ul>
-                <div class="nav-toggle" id="mobile-menu" aria-hidden="true">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
+
+                <!-- Mobile Menu Toggle -->
+                <div class="mobile-menu" id="mobile-menu" role="button" aria-label="Toggle mobile menu" aria-expanded="false" tabindex="0">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
                 </div>
             </div>
         </nav>
 
-        <!-- (rest of your site content remains unchanged) -->
-        <section id="home" class="hero">
-            <div class="hero-background">
-                <img src="https://pplx-res.cloudinary.com/image/upload/v1754843849/pplx_project_search_images/67c3ce153d56fea5946c1e5c059f149a2427e8d8.png" alt="Network Visualization Background" class="hero-bg-image">
-                <div class="hero-overlay"></div>
-            </div>
-            <div class="hero-content">
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Hero Section -->
+            <section id="home" class="hero" role="banner">
                 <div class="container">
-                    <h1 class="hero-title">Welcome to Prokode Labs</h1>
-                    <p class="hero-subtitle">Securing Digital Identities, Empowering Enterprise Access</p>
-                    <a href="#services" class="hero-cta">Explore Our Services</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- (other sections kept intact) -->
-        <!-- Mission & Vision ... Services ... Projects ... Resources ... Team ... Footer (unchanged) -->
-        <section class="mission-vision">
-            <div class="container">
-                <div class="mission-vision-grid">
-                    <div class="mission-card">
-                        <h3>Our Mission</h3>
-                        <p>To deliver comprehensive Identity and Access Management solutions that protect organizations while enabling seamless user experiences.</p>
+                    <div class="hero-content">
+                        <h1>Securing Digital Identities, Empowering Enterprise Access</h1>
+                        <p class="hero-description">
+                            Welcome to the Prokode Labs internal portal. Access your identity management tools, 
+                            project resources, and team collaboration features in one secure location.
+                        </p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <h3>99.9%</h3>
+                                <p>System Uptime</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>24/7</h3>
+                                <p>Security Monitoring</p>
+                            </div>
+                            <div class="stat-item">
+                                <h3>SOC 2</h3>
+                                <p>Compliance Ready</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="vision-card">
-                        <h3>Our Vision</h3>
-                        <p>Leading the future of secure digital identity through innovative IAM technologies and expert consulting services.</p>
+                </div>
+            </section>
+
+            <!-- Mission & Vision Section -->
+            <section id="about" class="about-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Our Mission & Vision</h2>
+                        <p>Driving innovation in identity and access management</p>
+                    </div>
+                    
+                    <div class="mission-vision-grid">
+                        <div class="mission-card card">
+                            <div class="card-icon" aria-hidden="true">🎯</div>
+                            <h3>Our Mission</h3>
+                            <p>
+                                To deliver comprehensive Identity and Access Management solutions that protect 
+                                organizations while enabling seamless user experiences. We focus on building 
+                                trust through security, compliance, and innovation.
+                            </p>
+                        </div>
+                        
+                        <div class="vision-card card">
+                            <div class="card-icon" aria-hidden="true">🚀</div>
+                            <h3>Our Vision</h3>
+                            <p>
+                                Leading the future of secure digital identity through innovative IAM technologies 
+                                and expert consulting services. We envision a world where security and usability 
+                                work in perfect harmony.
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Footer Section -->
-        <footer class="footer">
+            <!-- Services Section -->
+            <section id="services" class="services-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Our Core Services</h2>
+                        <p>Comprehensive IAM solutions for modern enterprises</p>
+                    </div>
+                    
+                    <div class="services-grid">
+                        <div class="service-card card">
+                            <div class="service-icon" aria-hidden="true">🔐</div>
+                            <h3>Identity Management</h3>
+                            <p>Complete user lifecycle management with automated provisioning and deprovisioning.</p>
+                            <ul class="service-features">
+                                <li>User Identity Governance</li>
+                                <li>Automated Provisioning</li>
+                                <li>Identity Analytics</li>
+                                <li>Compliance Reporting</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="service-card card">
+                            <div class="service-icon" aria-hidden="true">🛡️</div>
+                            <h3>Access Management</h3>
+                            <p>Secure access controls with multi-factor authentication and single sign-on.</p>
+                            <ul class="service-features">
+                                <li>Single Sign-On (SSO)</li>
+                                <li>Multi-Factor Authentication</li>
+                                <li>Privileged Access Management</li>
+                                <li>Zero Trust Architecture</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="service-card card">
+                            <div class="service-icon" aria-hidden="true">⚙️</div>
+                            <h3>Integration Services</h3>
+                            <p>Seamless integration with existing enterprise applications and systems.</p>
+                            <ul class="service-features">
+                                <li>SAML/OIDC Implementation</li>
+                                <li>API Gateway Integration</li>
+                                <li>Directory Services</li>
+                                <li>Custom Connectors</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="service-card card">
+                            <div class="service-icon" aria-hidden="true">📊</div>
+                            <h3>Compliance & Governance</h3>
+                            <p>Meet regulatory requirements with comprehensive audit and governance tools.</p>
+                            <ul class="service-features">
+                                <li>SOC 2 Compliance</li>
+                                <li>GDPR/Privacy Controls</li>
+                                <li>Access Certification</li>
+                                <li>Risk Assessment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="projects-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Current Projects</h2>
+                        <p>Innovation in action across our client portfolio</p>
+                    </div>
+                    
+                    <div class="projects-grid">
+                        <div class="project-card card">
+                            <div class="project-status active" aria-label="Active project">🟢 Active</div>
+                            <h3>Enterprise SSO Migration</h3>
+                            <p>Large-scale single sign-on implementation for Fortune 500 client.</p>
+                            <div class="project-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%;" aria-label="75% complete"></div>
+                                </div>
+                                <span>75% Complete</span>
+                            </div>
+                            <div class="project-tech">
+                                <span class="tech-tag">Okta</span>
+                                <span class="tech-tag">SAML</span>
+                                <span class="tech-tag">Azure AD</span>
+                            </div>
+                        </div>
+                        
+                        <div class="project-card card">
+                            <div class="project-status planning" aria-label="Planning phase">🟡 Planning</div>
+                            <h3>Zero Trust Implementation</h3>
+                            <p>Comprehensive zero trust architecture deployment with identity verification.</p>
+                            <div class="project-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 25%;" aria-label="25% complete"></div>
+                                </div>
+                                <span>25% Complete</span>
+                            </div>
+                            <div class="project-tech">
+                                <span class="tech-tag">CyberArk</span>
+                                <span class="tech-tag">Conditional Access</span>
+                                <span class="tech-tag">MFA</span>
+                            </div>
+                        </div>
+                        
+                        <div class="project-card card">
+                            <div class="project-status completed" aria-label="Completed project">✅ Completed</div>
+                            <h3>Compliance Automation</h3>
+                            <p>Automated compliance reporting and access certification for healthcare client.</p>
+                            <div class="project-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 100%;" aria-label="100% complete"></div>
+                                </div>
+                                <span>100% Complete</span>
+                            </div>
+                            <div class="project-tech">
+                                <span class="tech-tag">SailPoint</span>
+                                <span class="tech-tag">HIPAA</span>
+                                <span class="tech-tag">Governance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Team Section -->
+            <section id="team" class="team-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Our Expert Team</h2>
+                        <p>Leading professionals in identity and access management</p>
+                    </div>
+                    
+                    <div class="team-grid">
+                        <div class="team-card card">
+                            <div class="team-avatar" aria-hidden="true">👨‍💼</div>
+                            <h3>IAM Architect</h3>
+                            <p class="team-role">Lead Solutions Architect</p>
+                            <p class="team-bio">
+                                Specializes in enterprise identity governance and zero trust architecture design.
+                            </p>
+                            <div class="team-skills">
+                                <span class="skill-tag">Okta</span>
+                                <span class="skill-tag">Azure AD</span>
+                                <span class="skill-tag">SAML/OIDC</span>
+                            </div>
+                        </div>
+                        
+                        <div class="team-card card">
+                            <div class="team-avatar" aria-hidden="true">👩‍💻</div>
+                            <h3>Security Engineer</h3>
+                            <p class="team-role">Senior Security Specialist</p>
+                            <p class="team-bio">
+                                Expert in privileged access management and security compliance frameworks.
+                            </p>
+                            <div class="team-skills">
+                                <span class="skill-tag">CyberArk</span>
+                                <span class="skill-tag">PAM</span>
+                                <span class="skill-tag">SOC 2</span>
+                            </div>
+                        </div>
+                        
+                        <div class="team-card card">
+                            <div class="team-avatar" aria-hidden="true">👨‍💻</div>
+                            <h3>Integration Specialist</h3>
+                            <p class="team-role">Technical Integration Lead</p>
+                            <p class="team-bio">
+                                Focuses on seamless integration and API development for enterprise systems.
+                            </p>
+                            <div class="team-skills">
+                                <span class="skill-tag">APIs</span>
+                                <span class="skill-tag">SCIM</span>
+                                <span class="skill-tag">Directory Services</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Resources Section -->
+            <section id="resources" class="resources-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Internal Resources</h2>
+                        <p>Quick access to tools, documentation, and internal systems</p>
+                    </div>
+                    
+                    <div class="resources-grid">
+                        <div class="resource-card card">
+                            <div class="resource-icon" aria-hidden="true">📚</div>
+                            <h3>Documentation Hub</h3>
+                            <p>Access technical documentation, best practices, and implementation guides.</p>
+                            <a href="#docs" class="resource-link" aria-label="Access Documentation Hub">Access →</a>
+                        </div>
+                        
+                        <div class="resource-card card">
+                            <div class="resource-icon" aria-hidden="true">🔧</div>
+                            <h3>Management Tools</h3>
+                            <p>Direct access to Okta admin console, Azure AD, and other management platforms.</p>
+                            <a href="#tools" class="resource-link" aria-label="Access Management Tools">Access →</a>
+                        </div>
+                        
+                        <div class="resource-card card">
+                            <div class="resource-icon" aria-hidden="true">📊</div>
+                            <h3>Analytics Dashboard</h3>
+                            <p>Real-time monitoring, usage analytics, and security insights.</p>
+                            <a href="#analytics" class="resource-link" aria-label="Access Analytics Dashboard">Access →</a>
+                        </div>
+                        
+                        <div class="resource-card card">
+                            <div class="resource-icon" aria-hidden="true">🎫</div>
+                            <h3>Support Portal</h3>
+                            <p>Internal ticketing system and escalation procedures for critical issues.</p>
+                            <a href="#support" class="resource-link" aria-label="Access Support Portal">Access →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="contact-section">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Internal Contact Information</h2>
+                        <p>Get in touch with our internal teams</p>
+                    </div>
+                    
+                    <div class="contact-grid">
+                        <div class="contact-card card">
+                            <h3>🏢 Headquarters</h3>
+                            <p>
+                                Prokode Labs<br>
+                                Identity & Access Management Division<br>
+                                Chennai, India<br>
+                                <strong>Internal Use Only</strong>
+                            </p>
+                        </div>
+                        
+                        <div class="contact-card card">
+                            <h3>📧 Internal Contacts</h3>
+                            <p>
+                                <strong>Technical Support:</strong><br>
+                                <a href="mailto:internal@prokodelabs.com">internal@prokodelabs.com</a><br><br>
+                                <strong>Emergency Escalation:</strong><br>
+                                <a href="mailto:emergency@prokodelabs.com">emergency@prokodelabs.com</a>
+                            </p>
+                        </div>
+                        
+                        <div class="contact-card card">
+                            <h3>⏰ Support Hours</h3>
+                            <p>
+                                <strong>Standard Support:</strong><br>
+                                Monday - Friday: 9:00 AM - 6:00 PM IST<br><br>
+                                <strong>Emergency Support:</strong><br>
+                                24/7 for critical security incidents
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer" role="contentinfo">
             <div class="container">
                 <div class="footer-content">
-                    <div class="footer-section">
-                        <h3>Prokode Labs</h3>
-                        <p>Internal Employee Portal</p>
+                    <div class="footer-brand">
+                        <div class="footer-logo">
+                            <div class="logo-icon" aria-hidden="true">🔐</div>
+                            <h3>Prokode Labs</h3>
+                        </div>
+                        <p>Securing digital identities, empowering enterprise access.</p>
                     </div>
-                    <div class="footer-section">
-                        <h4>Quick Links</h4>
-                        <ul>
-                            <li><a href="#services">Services</a></li>
-                            <li><a href="#projects">Projects</a></li>
-                            <li><a href="#team">Team</a></li>
-                            <li><a href="#resources">Resources</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-section">
-                        <h4>Contact</h4>
-                        <p>Email: internal@prokodelabs.com</p>
-                        <p>Phone: (555) 123-4567</p>
+                    
+                    <div class="footer-links">
+                        <div class="footer-section">
+                            <h4>Internal Links</h4>
+                            <ul>
+                                <li><a href="#home">Home</a></li>
+                                <li><a href="#services">Services</a></li>
+                                <li><a href="#projects">Projects</a></li>
+                                <li><a href="#team">Team</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h4>Resources</h4>
+                            <ul>
+                                <li><a href="#docs">Documentation</a></li>
+                                <li><a href="#tools">Management Tools</a></li>
+                                <li><a href="#analytics">Analytics</a></li>
+                                <li><a href="#support">Support Portal</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h4>Security</h4>
+                            <ul>
+                                <li><a href="mailto:security@prokodelabs.com">Security Team</a></li>
+                                <li><a href="mailto:compliance@prokodelabs.com">Compliance</a></li>
+                                <li><a href="#incident">Incident Response</a></li>
+                                <li><a href="#policies">Security Policies</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
+                
                 <div class="footer-bottom">
-                    <p>&copy; 2025 Prokode Labs. All rights reserved.</p>
-                    <p class="internal-notice">For Internal Use Only - Confidential</p>
+                    <p>&copy; 2024 Prokode Labs. All rights reserved.</p>
+                    <p class="footer-disclaimer">
+                        This is an internal portal. Unauthorized access is strictly prohibited and monitored.
+                    </p>
                 </div>
             </div>
         </footer>
     </div>
 
-    <!-- Small runtime helper script to restyle the Okta widget and add accessibility + UI improvements.
-         This script waits for the Okta widget to appear and then:
-         - reduces white panels
-         - styles the FastPass idp button with an icon + tooltip
-         - inserts an error container under the primary button
-         - adjusts checkbox size and password icon alignment
-    -->
+    <!-- JavaScript Files -->
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    
+    <!-- Analytics and Monitoring (Internal Only) -->
     <script>
-    (function () {
-        // Utility: wait for element
-        function waitFor(selector, timeout = 5000) {
-            return new Promise((resolve, reject) => {
-                const el = document.querySelector(selector);
-                if (el) return resolve(el);
-                const obs = new MutationObserver(() => {
-                    const el2 = document.querySelector(selector);
-                    if (el2) {
-                        obs.disconnect();
-                        resolve(el2);
-                    }
-                });
-                obs.observe(document.body, { childList: true, subtree: true });
-                setTimeout(() => {
-                    obs.disconnect();
-                    reject(new Error('timeout waiting for ' + selector));
-                }, timeout);
+        // Basic internal analytics
+        if (window.ProkodeAuth && window.ProkodeAuth.isAuthenticated()) {
+            console.log('🏢 Internal Portal Session Started');
+            
+            // Track page visibility for security
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'hidden') {
+                    console.log('📱 Portal session backgrounded');
+                } else {
+                    console.log('📱 Portal session foregrounded');
+                }
             });
         }
-
-        // After widget loads, apply tweaks
-        waitFor('.okta-sign-in-widget', 8000).then(widget => {
-            // Make widget container visually match our dark theme and remove large white panels
-            widget.setAttribute('aria-label', 'Okta sign-in widget');
-            widget.style.background = 'transparent';
-            widget.style.boxShadow = 'none';
-            widget.style.border = 'none';
-            widget.style.width = '100%';
-
-            // Move and restyle Okta IDP buttons (e.g., FastPass) to be distinct
-            const idpButtons = widget.querySelectorAll('.okta-idp-button, .idp-button'); // support variations
-            idpButtons.forEach((btn) => {
-                btn.classList.add('pk-fastpass');
-                btn.setAttribute('role', 'button');
-                btn.setAttribute('tabindex', '0');
-                // add descriptive text if missing
-                if (!btn.querySelector('.pk-fastpass-label')) {
-                    const label = document.createElement('span');
-                    label.className = 'pk-fastpass-label';
-                    label.textContent = btn.textContent.trim() || 'Sign in with Okta FastPass';
-                    btn.innerHTML = ''; // clear existing to avoid duplication then append new structured content
-                    // Icon
-                    const icon = document.createElement('span');
-                    icon.className = 'pk-fastpass-icon';
-                    icon.setAttribute('aria-hidden', 'true');
-                    icon.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 2C8.13 2 5 5.13 5 9c0 2.92 1.99 5.39 4.73 6.18L10 22l2-1 2 1-0.73-6.82C17.01 14.39 19 11.92 19 9c0-3.87-3.13-7-7-7z\" fill=\"currentColor\"/></svg>';
-                    // Label & short help
-                    const text = document.createElement('span');
-                    text.className = 'pk-fastpass-text';
-                    text.innerHTML = '<strong>Sign in with Okta FastPass</strong><span class=\"pk-fastpass-sub\">Quick passwordless sign-in</span>';
-                    // Tooltip (visually hidden until hover)
-                    const tooltip = document.createElement('span');
-                    tooltip.className = 'pk-fastpass-tooltip';
-                    tooltip.textContent = 'Use FastPass to sign in securely without typing your password. Requires registered device.';
-                    // Assemble
-                    btn.appendChild(icon);
-                    btn.appendChild(text);
-                    btn.appendChild(tooltip);
-                }
-            });
-
-            // Make sure primary button has an error container below it (so we can show validation messages)
-            const primary = widget.querySelector('.button-primary') || widget.querySelector('button[type="submit"]');
-            if (primary) {
-                // find parent container and add error area
-                let container = primary.parentElement;
-                // If wrapped inside multiple elements, find a good insertion point
-                const err = document.createElement('div');
-                err.id = 'okta-inline-error';
-                err.className = 'okta-inline-error';
-                err.setAttribute('role', 'alert');
-                err.setAttribute('aria-live', 'assertive');
-                // avoid duplicate
-                if (!widget.querySelector('#okta-inline-error')) {
-                    container.appendChild(err);
-                }
-            }
-
-            // Checkbox increase (Keep me signed in)
-            const checkboxes = widget.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(cb => {
-                cb.style.transform = 'scale(1.25)';
-                cb.style.marginRight = '10px';
-                cb.setAttribute('aria-checked', cb.checked ? 'true' : 'false');
-                cb.addEventListener('change', e => cb.setAttribute('aria-checked', e.target.checked ? 'true' : 'false'));
-            });
-
-            // Adjust password visibility icon alignment
-            const pwContainers = widget.querySelectorAll('.okta-form-input-field, .password-input');
-            pwContainers.forEach(c => {
-                c.style.display = 'flex';
-                c.style.alignItems = 'center';
-                c.style.gap = '8px';
-            });
-
-            // Improve focus outlines for keyboard users
-            const interactive = widget.querySelectorAll('a, button, input, .pk-fastpass');
-            interactive.forEach(n => {
-                n.addEventListener('focus', () => n.classList.add('pk-focus'));
-                n.addEventListener('blur', () => n.classList.remove('pk-focus'));
-            });
-
-            // If the widget produces validation messages internally, copy them into our inline-error area.
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach(m => {
-                    if (m.addedNodes && m.addedNodes.length) {
-                        m.addedNodes.forEach(node => {
-                            if (node.nodeType === 1 && node.matches && (node.classList.contains('okta-form-error') || node.classList.contains('infobox-error'))) {
-                                // move text to okta-inline-error
-                                const inline = widget.querySelector('#okta-inline-error');
-                                if (inline) inline.innerText = node.textContent.trim();
-                            }
-                        });
-                    }
-                });
-            });
-            observer.observe(widget, { childList: true, subtree: true });
-
-        }).catch(() => {
-            // Widget didn't appear; nothing fatal, we keep the original behavior
-            console.warn('Okta widget did not appear in time for UI adjustments.');
-        });
-    })();
     </script>
-
-    <!-- Load authentication script first (keeps existing behavior) -->
-    <script src="auth.js"></script>
-    <!-- Then load your existing app script -->
-    <script src="app.js"></script>
 </body>
 </html>
