@@ -1,5 +1,5 @@
 /* =============================================================================
-   AUTHENTICATION STYLES FOR PROKODE LABS
+   ENTERPRISE AUTHENTICATION STYLES FOR PROKODE LABS
    ============================================================================= */
 
 /* Authentication Status Bar */
@@ -8,417 +8,183 @@
     top: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(135deg, var(--prokode-primary-dark), var(--prokode-primary-blue));
-    color: var(--prokode-white);
+    background: linear-gradient(135deg, #173159, #217eaa);
+    color: #ffffff;
     padding: 12px 0;
     z-index: 9999;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(74, 199, 244, 0.2);
+    border-bottom: 1px solid rgba(74,199,244,0.2);
 }
-
 .auth-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 var(--space-md);
+    padding: 0 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .auth-user-info {
     display: flex;
     align-items: center;
-    gap: var(--space-xs);
-    font-weight: var(--font-weight-medium);
+    gap: 8px;
+    font-weight: 500;
     font-size: 14px;
 }
-
 .user-name {
-    color: var(--prokode-accent-teal);
-    font-weight: var(--font-weight-semibold);
+    color: #4AC7F4;
+    font-weight: 600;
 }
-
 .auth-logout-btn {
     display: flex;
     align-items: center;
-    gap: var(--space-xs);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--prokode-white);
-    padding: var(--space-xs) var(--space-md);
-    border-radius: var(--radius-md);
+    gap: 8px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.20);
+    color: #fff;
+    padding: 6px 18px;
+    border-radius: 6px;
     font-size: 12px;
-    font-weight: var(--font-weight-medium);
+    font-weight: 500;
     cursor: pointer;
-    transition: var(--transition-fast);
+    transition: all 0.17s;
 }
-
 .auth-logout-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(74, 199, 244, 0.5);
+    background: rgba(255,255,255,0.18);
+    border-color: #4ac7f4;
     transform: translateY(-1px);
 }
-
 .auth-logout-btn svg {
-    width: 14px;
-    height: 14px;
+    width: 14px; height: 14px;
 }
 
-/* Login Overlay */
+/* Login Overlay and Card */
 .login-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, 
-        rgba(23, 49, 89, 0.95), 
-        rgba(44, 62, 80, 0.90)
-    );
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg,#173159 96%,#173159 99%);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10000;
-    backdrop-filter: blur(20px);
-    animation: fadeIn 0.5s ease-out;
+    backdrop-filter: blur(24px);
+    animation: fadeIn 0.5s;
 }
-
 .login-card {
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(74, 199, 244, 0.2);
-    border-radius: var(--radius-xl);
-    padding: var(--space-3xl);
-    width: min(480px, 90vw);
-    max-width: 480px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    background: rgba(18,24,36,0.97);
+    border: 1.5px solid #4ac7f4;
+    border-radius: 19px;
+    box-shadow: 0 22px 50px rgba(30,46,79,0.35);
     text-align: center;
-    backdrop-filter: blur(20px);
+    max-width: 490px;
+    width: min(98vw,490px);
+    padding: 34px 0 34px 0;
     position: relative;
-    overflow: hidden;
-}
-
-.login-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, 
-        var(--prokode-primary-blue), 
-        var(--prokode-accent-teal),
-        var(--prokode-primary-blue)
-    );
-    background-size: 200% 100%;
-    animation: shimmer 3s ease-in-out infinite;
-}
-
-@keyframes shimmer {
-    0%, 100% { background-position: 200% 0; }
-    50% { background-position: -200% 0; }
-}
-
-.login-header {
-    margin-bottom: var(--space-2xl);
-}
-
-.login-logo {
+    overflow: auto;
+    color: #eaf6ff;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-md);
-    margin-bottom: var(--space-lg);
 }
 
-.login-logo h1 {
-    color: var(--prokode-primary-dark);
-    font-size: 2.5rem;
-    font-weight: var(--font-weight-bold);
-    margin: 0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.logo-icon {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, var(--prokode-accent-teal), var(--prokode-primary-blue));
-    border-radius: var(--radius-lg);
+/* Okta Widget Scrollable Area */
+#okta-signin-container {
+    min-height: 440px;
+    max-height: 77vh;
+    width: 95%;
+    overflow-y: auto;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 8px 0 26px 0 !important;
     display: flex;
-    align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(74, 199, 244, 0.3);
 }
-
-.login-tagline {
-    color: var(--prokode-medium-gray);
-    font-size: 1.1rem;
-    margin: 0;
-    font-weight: var(--font-weight-medium);
+#okta-signin-container .okta-sign-in-widget {
+    background: transparent !important;
+    border-radius: 13px !important;
+    box-shadow: none !important;
 }
-
-.login-content {
-    position: relative;
+#okta-signin-container .okta-form-title,
+#okta-signin-container label {
+    color: #bfeaff !important;
+    font-weight: 600 !important;
+    font-size: 1.13em !important;
 }
-
-.login-description {
-    color: var(--prokode-dark-gray);
-    margin-bottom: var(--space-xl);
-    line-height: 1.6;
-    font-size: 0.95rem;
+#okta-signin-container input {
+    background: #222d39 !important;
+    color: #fff !important;
+    border: 1.7px solid #4ac7f4 !important;
+    border-radius: 8px !important;
+}
+#okta-signin-container .button-primary {
+    background: #4ac7f4 !important;
+    color: #173159 !important;
+    border-radius: 8px !important;
+    font-weight: bold !important;
+    min-width: 158px;
+    margin-top: 13px !important;
+    margin-bottom: 14px !important;
+    box-shadow: none !important;
+}
+#okta-signin-container .button-primary:hover {
+    background: #217eaa !important;
+    color: #fff !important;
+}
+#okta-signin-container .okta-form-input-field input:focus {
+    border-color: #4ac7f4 !important;
+    box-shadow: 0 0 0 2px rgba(74,199,244,0.17) !important;
+}
+#okta-signin-container .okta-form-actions {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100%;
+    position: static !important;
+}
+#okta-signin-container .link {
+    color: #4ac7f4 !important;
+}
+#okta-signin-container .link:hover {
+    color: #217eaa !important;
 }
 
 .okta-signin-container {
-    position: relative;
-}
-
-/* Loading Spinner */
-.auth-loading {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-lg);
-    padding: var(--space-2xl);
+    justify-content: center;
 }
 
-.loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid rgba(74, 199, 244, 0.2);
-    border-top: 3px solid var(--prokode-accent-teal);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+
+/* Other styling overrides */
+.login-header {margin-bottom: 22px;}
+.login-logo {display:flex;flex-direction:column;align-items:center;gap:20px;margin-bottom:24px;}
+.login-logo h1 {color:#bfeaff;font-size:2.3rem;font-weight:700;margin:0;text-shadow:0 2px 4px rgba(0,0,0,0.13);}
+.logo-icon {width:50px; height:50px; background:linear-gradient(135deg,#4AC7F4,#217eaa); border-radius:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 15px #4ac7f4;}
+.login-tagline {color:#a9bed4;font-size:1.1rem;margin:0;font-weight:500;}
+.login-content {position:relative;}
+.login-description {color:#bfeaff;margin-bottom:28px;line-height:1.6;font-size:0.98rem;}
+
+.auth-loading {display:flex;flex-direction:column;align-items:center;gap:20px;padding:34px;}
+.loading-spinner {width:40px; height:40px; border:3px solid #4ac7f4; border-top:3px solid #217eaa; border-radius:50%; animation:spin 1s linear infinite;}
+@keyframes spin {0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+
+.auth-error-message {background:rgba(255,84,89,0.11); border:1px solid #d73027; color:#d73027; padding:18px;border-radius:7px;margin-bottom:20px; font-size:0.93em; text-align:center;}
+@keyframes fadeIn {from {opacity: 0;transform: translateY(24px);}to {opacity: 1;transform: translateY(0);}}
+
+#protected-content {margin-top: 60px;opacity: 0;transition: opacity 0.5s;}
+#protected-content.loaded {opacity: 1;}
+
+@media (max-width: 650px) {
+    .login-card { width:96vw; max-width:none; font-size:1.02em; padding:6px 2px; }
+    #okta-signin-container {min-height:250px; padding:6px 0 12px 0 !important;}
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.auth-loading p {
-    color: var(--prokode-medium-gray);
-    font-weight: var(--font-weight-medium);
-    margin: 0;
-}
-
-/* Error Messages */
-.auth-error-message {
-    background: rgba(255, 84, 89, 0.1);
-    border: 1px solid rgba(255, 84, 89, 0.3);
-    color: #d73027;
-    padding: var(--space-md);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--space-lg);
-    font-size: 0.9rem;
-    text-align: center;
-    animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Adjust main content for auth status bar */
-#protected-content {
-    margin-top: 60px;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-#protected-content.loaded {
-    opacity: 1;
-}
-
-/* Okta Widget Customizations */
-#okta-signin-container .okta-sign-in-widget {
-    border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-}
-
-#okta-signin-container .okta-sign-in-header {
-    display: none !important;
-}
-
-#okta-signin-container .okta-form-title {
-    color: var(--prokode-primary-dark) !important;
-    font-weight: var(--font-weight-semibold) !important;
-    margin-bottom: var(--space-lg) !important;
-}
-
-#okta-signin-container .okta-form-input-field input {
-    border-radius: var(--radius-md) !important;
-    border: 1px solid rgba(74, 199, 244, 0.3) !important;
-    padding: var(--space-md) !important;
-    transition: var(--transition-fast) !important;
-}
-
-#okta-signin-container .okta-form-input-field input:focus {
-    border-color: var(--prokode-accent-teal) !important;
-    box-shadow: 0 0 0 3px rgba(74, 199, 244, 0.1) !important;
-}
-
-#okta-signin-container .button-primary {
-    background: var(--prokode-accent-teal) !important;
-    border-color: var(--prokode-accent-teal) !important;
-    border-radius: var(--radius-md) !important;
-    padding: var(--space-md) var(--space-xl) !important;
-    font-weight: var(--font-weight-semibold) !important;
-    transition: var(--transition-fast) !important;
-}
-
-#okta-signin-container .button-primary:hover {
-    background: var(--prokode-primary-blue) !important;
-    border-color: var(--prokode-primary-blue) !important;
-    transform: translateY(-1px) !important;
-}
-
-#okta-signin-container .okta-form-subtitle {
-    color: var(--prokode-medium-gray) !important;
-}
-
-#okta-signin-container .link {
-    color: var(--prokode-primary-blue) !important;
-}
-
-#okta-signin-container .link:hover {
-    color: var(--prokode-accent-teal) !important;
-}
-
-/* MFA and Advanced Auth Styling */
-#okta-signin-container .beacon-container {
-    border: 2px solid rgba(74, 199, 244, 0.2) !important;
-    border-radius: var(--radius-lg) !important;
-    background: rgba(74, 199, 244, 0.05) !important;
-}
-
-#okta-signin-container .factors-dropdown-wrap .factors-dropdown {
-    border-radius: var(--radius-md) !important;
-    border: 1px solid rgba(74, 199, 244, 0.3) !important;
-}
-
-/* Responsive Design for Authentication */
-@media screen and (max-width: 768px) {
-    .auth-container {
-        flex-direction: column;
-        gap: var(--space-sm);
-        text-align: center;
-    }
-    
-    .login-card {
-        padding: var(--space-xl);
-        margin: var(--space-md);
-    }
-    
-    .login-logo h1 {
-        font-size: 2rem;
-    }
-    
-    #protected-content {
-        margin-top: 80px;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .login-card {
-        padding: var(--space-lg);
-    }
-    
-    .login-logo h1 {
-        font-size: 1.8rem;
-    }
-    
-    .auth-logout-btn {
-        padding: var(--space-xs);
-        font-size: 11px;
-    }
-    
-    .auth-logout-btn span {
-        display: none;
-    }
-}
-
-/* Dark mode support for authentication (if needed) */
-@media (prefers-color-scheme: dark) {
-    .login-card {
-        background: rgba(30, 40, 50, 0.95);
-        color: var(--prokode-white);
-    }
-    
-    .login-logo h1 {
-        color: var(--prokode-white);
-    }
-    
-    .login-tagline {
-        color: rgba(255, 255, 255, 0.8);
-    }
-    
-    .login-description {
-        color: rgba(255, 255, 255, 0.9);
-    }
-    
-    #okta-signin-container .okta-form-title {
-        color: var(--prokode-white) !important;
-    }
-}
-
-/* Animation for smooth transitions */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Security indicator */
-.login-card::after {
-    content: '🔒 Secured by Okta';
-    position: absolute;
-    bottom: var(--space-md);
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.8rem;
-    color: var(--prokode-medium-gray);
-    opacity: 0.7;
+@media (max-width: 420px) {
+    .login-card {font-size:0.98em; padding:4px 1px;}
 }
 
 /* Focus states for accessibility */
-.auth-logout-btn:focus,
-#okta-signin-container button:focus,
-#okta-signin-container input:focus {
-    outline: 2px solid var(--prokode-accent-teal) !important;
+.auth-logout-btn:focus, #okta-signin-container button:focus, #okta-signin-container input:focus {
+    outline: 2px solid #4ac7f4 !important;
     outline-offset: 2px !important;
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .login-card {
-        border: 2px solid var(--prokode-primary-dark);
-    }
-    
-    .auth-status {
-        border-bottom: 2px solid var(--prokode-accent-teal);
-    }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-    .login-overlay,
-    #protected-content,
-    .auth-logout-btn,
-    .loading-spinner {
-        animation: none !important;
-        transition: none !important;
-    }
 }
