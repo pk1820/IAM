@@ -1,0 +1,10 @@
+Category,File,Issue,Severity,Description,Recommendation,Line_Reference
+Security Issues,auth.js,Hardcoded sensitive credentials,CRITICAL,"Okta domain, client ID, and redirect URI are hardcoded in client-side code",Move sensitive configuration to environment variables or secure server-side endpoint,Lines 11-17
+Security Issues,auth.js,Syntax error in configuration object,HIGH,Missing closing brace in helpLinks object causing runtime errors,Fix syntax by adding missing closing brace,Lines 36-43
+Security Issues,auth.js,Insufficient error handling,MEDIUM,Silent failures in authentication state checking,Add proper error logging and user feedback,checkAuthState method
+Performance Issues,app.js,Multiple DOM queries,MEDIUM,Repeated querySelector calls without caching,Cache DOM elements in constructor or init methods,N/A
+Performance Issues,app.js,Excessive session checking,LOW,Session validation every 5 minutes may be too frequent,Consider increasing interval to 15-30 minutes,Line ~700
+Maintainability Issues,auth.js,Missing JSDoc documentation,MEDIUM,Complex authentication logic lacks proper documentation,Add comprehensive JSDoc comments for all methods,N/A
+Maintainability Issues,app.js,Code duplication,MEDIUM,Similar DOM manipulation patterns repeated across classes,Create utility functions for common DOM operations,N/A
+Ui Ux Issues,style.css,Accessibility concerns,MEDIUM,Insufficient color contrast ratios and missing focus indicators,Ensure WCAG 2.1 AA compliance for accessibility,N/A
+Ui Ux Issues,index.html,Missing semantic HTML,LOW,Limited use of semantic HTML5 elements,"Use proper semantic tags like <main>, <article>, <section>",N/A
